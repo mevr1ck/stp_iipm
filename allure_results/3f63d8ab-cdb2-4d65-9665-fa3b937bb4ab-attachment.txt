@@ -1,0 +1,6 @@
+111 200 261
+{'labels': [111, 200, 261], 'detectors': [22], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
+{"msg":"OK","taskId":"53df3ee4-e991-46f0-ab86-0f7a32e5c17f"}
+
+1 Запись успешно удалена
+Соединение с PostgreSQL закрыто

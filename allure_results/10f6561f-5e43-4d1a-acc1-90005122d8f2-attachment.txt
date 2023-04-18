@@ -1,0 +1,4 @@
+80 260 220
+{'labels': [80, 260, 220], 'detectors': [22], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
+{"msg":"OK","taskId":"b4944eb7-e4e6-434e-b052-467e5bc268ef"}
+

@@ -1,0 +1,4 @@
+231 120 241
+{'labels': [231, 120, 241], 'detectors': [15], 'schedule': '5a842239-4f93-4097-91c6-cdd6ddaa09e3'}
+{"code":409,"msg":"external system error","success":false}
+

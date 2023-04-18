@@ -581,7 +581,6 @@ def test_get_events_from_dt():
         assert timestamp <= response.json()[c.RESULTS][_][c.TIMESTAMP]
 
 
-
 @pytest.mark.gin
 @allure.title('Получение списка событий с некорректным параметром «from_dt»')
 def test_get_events_with_incorrect_from_dt():
@@ -623,3 +622,26 @@ def test_get_events_wrong_format_to_dt():
     response = mf.get_events(c.TO_DT, str(random.random()))
     assert response.status_code == 400
     assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@pytest.mark.parametrize('image_type', [1, 2, 0])
+@allure.title('Получение списка событий с параметром "image_type"')
+def test_get_events_image_type(image_type):
+    response = mf.get_events(c.IMAGE_TYPE, image_type)
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert (response.json()[c.RESULTS][_][c.IMAGE_TYPE]) == image_type
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими параметрами "image_type"')
+def test_get_events_with_2_different_image_types():
+    odh_image_type = 0
+    bpla_image_type = 2
+    response = mf.get_events(filter=c.IMAGE_TYPE, value=odh_image_type,
+                             filter2=c.IMAGE_TYPE, value2=bpla_image_type)
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert (response.json()[c.RESULTS][_][c.IMAGE_TYPE] == odh_image_type or
+                response.json()[c.RESULTS][_][c.IMAGE_TYPE] == bpla_image_type)
