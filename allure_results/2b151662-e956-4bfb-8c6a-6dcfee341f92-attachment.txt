@@ -1,0 +1,4 @@
+121 141 50
+{'labels': [121, 141, 50], 'detectors': [26], 'schedule': None}
+{"code":400,"msg":"validate","success":false}
+

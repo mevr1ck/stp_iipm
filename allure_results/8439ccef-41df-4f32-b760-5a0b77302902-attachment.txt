@@ -1,0 +1,4 @@
+201 101 261
+{'labels': [201, 101, 261], 'detectors': [17], 'schedule': 'da2361c3-b795-4dfe-9a31-541f4dc0ffaf'}
+{"code":409,"msg":"external system error","success":false}
+

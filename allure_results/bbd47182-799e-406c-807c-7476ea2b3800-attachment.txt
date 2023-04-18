@@ -1,0 +1,4 @@
+81 190 221
+{'labels': [81, 190, 221], 'detectors': [26], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
+{"msg":"OK","taskId":"0f7e237f-e6d9-4278-9782-ab77b81a198f"}
+

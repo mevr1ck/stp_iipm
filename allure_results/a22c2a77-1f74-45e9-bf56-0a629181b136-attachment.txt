@@ -1,0 +1,4 @@
+{"code":200,"data":{"iterations":[{"uuid":"8f64ef11-6771-4dcb-8d1a-ce7d11dd1d97","sourceUuid":"f89cb86c-b8a8-4d1e-a0e4-c9119c6418ea","createdAt":"2023-04-18T10:27:36.04534+03:00","status":"initialized","awaitedImagesAmount":null,"loadedImagesAmount":6,"loadedAt":"2023-04-18T10:27:36.106761+03:00","imageAmount":6}]},"success":true}
+
+{"code":200,"data":{"iterations":[{"uuid":"0182c6d8-3584-4288-a434-76a4cd5635f8","sourceUuid":"f89cb86c-b8a8-4d1e-a0e4-c9119c6418ea","createdAt":"2023-04-18T10:59:39.691846+03:00","status":"initialized","awaitedImagesAmount":null,"loadedImagesAmount":6,"loadedAt":"2023-04-18T10:59:39.734539+03:00","imageAmount":6}]},"success":true}
+

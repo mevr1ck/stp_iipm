@@ -1,0 +1,6 @@
+91 210 191
+{'labels': [91, 210, 191], 'detectors': [26], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
+{"msg":"OK","taskId":"bcc5cd0b-9c50-4ba8-8879-5b3447aa0a70"}
+
+1 Запись успешно удалена
+Соединение с PostgreSQL закрыто
