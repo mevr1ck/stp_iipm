@@ -1,0 +1,4 @@
+130 141 191
+{'labels': [130, 141, 191], 'detectors': [6], 'schedule': '0.7396187016820449'}
+{"code":400,"msg":"validate","success":false}
+

@@ -1,0 +1,4 @@
+191 100 60
+{'labels': [191, 100, 60], 'detectors': [18], 'schedule': 'e7232e9c-3aaa-4ac5-867a-2925f0947d0b'}
+{"code":409,"msg":"external system error","success":false}
+

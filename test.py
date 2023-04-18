@@ -141,7 +141,8 @@ def test_create_task_without_label():
 
 # Создание задачи при отсутствии обязательных параметров в запросе – пустые параметры «labels» и «detectors»
 @pytest.mark.zkh
-@allure.title('Создание задачи при отсутствии обязательных параметров в запросе – пустые параметры «labels» и «detectors»')
+@allure.title(
+    'Создание задачи при отсутствии обязательных параметров в запросе – пустые параметры «labels» и «detectors»')
 def test_create_task_without_labels_and_detectors():
     response = mf.create_task(labels=None, detectors=None, schedule_id=c.SCHEDULE_ID)
     assert response.status_code == 400
@@ -411,9 +412,10 @@ def test_send_expert_answer():
 # Получение результатов анализа по задаче, в поле "labels" получаем значение массива [71,81,91,101,111,121,131,141,151,161,171,181]
 @pytest.mark.zkh
 @allure.title('создание задачи, ЖКХ')
-@allure.description('Создание задачи на обработку, в поле "detectors" указывается значение массива [7,8,9,10,11,12,13,14,15,16,17,18]'
-                    'Получение статуса задания'
-                    'Получение результатов анализа по задаче, в поле "labels" получаем значение массива [71,81,91,101,111,121,131,141,151,161,171,181]')
+@allure.description(
+    'Создание задачи на обработку, в поле "detectors" указывается значение массива [7,8,9,10,11,12,13,14,15,16,17,18]'
+    'Получение статуса задания'
+    'Получение результатов анализа по задаче, в поле "labels" получаем значение массива [71,81,91,101,111,121,131,141,151,161,171,181]')
 def test_create_zkh_task():
     labels = c.ZKH_LABELS
     detectors = c.ZKH_DETECTORS
@@ -439,9 +441,10 @@ def test_create_zkh_task():
 # Получение результатов анализа по задаче, в поле "labels" получаем значение массива [191,201,211,221,231,241,251,261]
 @pytest.mark.zkh
 @allure.title('создание задачи, ЖКХ+')
-@allure.description('Создание задачи на обработку, в поле "detectors" указывается значение массива [19,20,21,22,23,24,25,26]'
-                    'Получение статуса задания'
-                    'Получение результатов анализа по задаче, в поле "labels" получаем значение массива [191,201,211,221,231,241,251,261]')
+@allure.description(
+    'Создание задачи на обработку, в поле "detectors" указывается значение массива [19,20,21,22,23,24,25,26]'
+    'Получение статуса задания'
+    'Получение результатов анализа по задаче, в поле "labels" получаем значение массива [191,201,211,221,231,241,251,261]')
 def test_create_zkh_plus_task():
     labels = c.ZKH_PLUS_LABELS
     detectors = c.ZKH_PLUS_DETECTORS
@@ -517,3 +520,106 @@ def test_create_zkh_new_task():
 
     mf.delete_task_from_db(task_id)
 
+
+@pytest.mark.gin
+@allure.title('Получение списка событий')
+def test_get_events():
+    response = mf.get_events()
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "page = 0" (счёт страниц начинается с 0 (0=1))')
+def test_get_events_page_0():
+    response = mf.get_events(c.PAGE, 0)
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "page = 1" (счёт страниц начинается с 0 (1=2))')
+def test_get_events_page_1():
+    response = mf.get_events(c.PAGE, 1)
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий некорректным параметром "page"')
+def test_get_events_incorrect_page_number():
+    response = mf.get_events(c.PAGE, str(random.random()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "page", на котором нет результатов')
+def test_get_events_page_without_results():
+    response = mf.get_events(c.PAGE, 99999999999999999)
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] is None
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с некорректным параметром "showBy"')
+def test_get_events_incorrect_show_by():
+    response = mf.get_events(c.SHOW_BY, str(random.random()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "from_dt"')
+def test_get_events_from_dt():
+    timestamp = mf.get_events().json()[c.RESULTS][0][c.TIMESTAMP]
+    response = mf.get_events(c.FROM_DT, timestamp - 1)
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+    assert type(response.json()[c.RESULTS][0][c.ID]) == int
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert timestamp <= response.json()[c.RESULTS][_][c.TIMESTAMP]
+
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с некорректным параметром «from_dt»')
+def test_get_events_with_incorrect_from_dt():
+    response = mf.get_events(c.FROM_DT, 99999999999)
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.VALIDATE
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "from_dt" не в формате Unix Timestamp')
+def test_get_events_wrong_format_from_dt():
+    response = mf.get_events(c.FROM_DT, str(random.random()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "to_dt"')
+def test_get_events_to_dt():
+    timestamp = mf.get_events().json()[c.RESULTS][0][c.TIMESTAMP]
+    response = mf.get_events(c.TO_DT, timestamp + 1)
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS][0][c.ID]) == int
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert timestamp >= response.json()[c.RESULTS][_][c.TIMESTAMP]
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с некорректным параметром «to_dt»')
+def test_get_events_with_incorrect_to_dt():
+    response = mf.get_events(c.TO_DT, 99999999999)
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.VALIDATE
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "to_dt" не в формате Unix Timestamp')
+def test_get_events_wrong_format_to_dt():
+    response = mf.get_events(c.TO_DT, str(random.random()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND

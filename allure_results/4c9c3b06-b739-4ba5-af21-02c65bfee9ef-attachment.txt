@@ -1,0 +1,5 @@
+{'labels': None, 'detectors': [6], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
+{"msg":"OK","taskId":"26debf6b-e230-4e04-925a-404be929f64e"}
+
+1 Запись успешно удалена
+Соединение с PostgreSQL закрыто

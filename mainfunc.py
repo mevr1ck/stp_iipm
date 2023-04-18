@@ -14,14 +14,15 @@ def get_token_for_auth(login, password):
     headers = c.APPLICATION_HEADERS
 
     response = requests.post(url, headers=headers, json=payload)
-    token = response.json()["data"]
+    token = response.json()[c.DATA]
     return token
 
 
-def get_events(filter=None, value=None):
+def get_events(filter=None, value=None, filter2=None, value2=None,
+               filter3=None, value3=None, filter4=None, value4=None):
     url = c.urlevents
     headers = c.AUTH_HEADERS
-    new_params = {filter: str(value)}
+    new_params = {filter: str(value), filter2: str(value2), filter3: str(value3), filter4: str(value4)}
     response = requests.get(url, headers=headers, params=new_params)
     return response
 

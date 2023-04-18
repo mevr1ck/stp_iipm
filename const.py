@@ -55,6 +55,12 @@ TASKS = 'tasks'
 LABELS = 'labels'
 DETECTORS = 'detectors'
 SCHEDULES = 'schedules'
+PAGE = 'page'
+VALIDATE = 'validate'
+SHOW_BY = 'showBy'
+BIND = 'bind'
+FROM_DT = 'from_dt'
+TO_DT = 'to_dt'
 
 LIST_LABELS = [50, 51, 60, 61, 70, 71, 80, 81, 90, 91, 100, 101, 110, 111, 121, 120, 130, 131, 140, 141, 150, 151,
                160, 161, 170, 181, 180, 190, 191, 200, 201, 211, 210, 221, 220, 231, 230, 240, 241, 250, 251,
