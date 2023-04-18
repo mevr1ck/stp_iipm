@@ -1,3 +1,0 @@
-{'labels': None, 'detectors': None, 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
-{"code":400,"msg":"validate","success":false}
-

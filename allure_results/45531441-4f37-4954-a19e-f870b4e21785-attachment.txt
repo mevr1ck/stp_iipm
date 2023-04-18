@@ -1,4 +1,0 @@
-140 251 90
-{'labels': [140, 251, 90], 'detectors': [26], 'schedule': '0.4482685534342905'}
-{"code":400,"msg":"validate","success":false}
-
