@@ -1,4 +1,0 @@
-191 180 221
-{'labels': [191, 180, 221], 'detectors': [22], 'schedule': None}
-{"code":400,"msg":"validate","success":false}
-

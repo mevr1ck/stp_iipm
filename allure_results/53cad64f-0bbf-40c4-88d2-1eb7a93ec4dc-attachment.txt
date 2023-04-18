@@ -1,4 +1,0 @@
-{"code":200,"data":{"iterations":[{"uuid":"9a42e2ea-90f9-4dac-a2d6-aff395d8ba85","sourceUuid":"f89cb86c-b8a8-4d1e-a0e4-c9119c6418ea","createdAt":"2023-04-18T16:52:53.604236+03:00","status":"initialized","awaitedImagesAmount":null,"loadedImagesAmount":6,"loadedAt":"2023-04-18T16:52:53.650349+03:00","imageAmount":6}]},"success":true}
-
-{"code":200,"data":{"iterations":[{"uuid":"c870e7c2-8fe7-4745-8d21-467c24aa73fc","sourceUuid":"f89cb86c-b8a8-4d1e-a0e4-c9119c6418ea","createdAt":"2023-04-18T17:37:36.037881+03:00","status":"initialized","awaitedImagesAmount":null,"loadedImagesAmount":6,"loadedAt":"2023-04-18T17:37:36.088791+03:00","imageAmount":6}]},"success":true}
-
