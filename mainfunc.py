@@ -23,7 +23,9 @@ def get_events(filter=None, value=None, filter2=None, value2=None,
     url = c.urlevents
     headers = c.AUTH_HEADERS
     new_params = {filter: str(value), filter2: str(value2), filter3: str(value3), filter4: str(value4)}
+
     response = requests.get(url, headers=headers, params=new_params)
+    print(url, new_params)
     return response
 
 

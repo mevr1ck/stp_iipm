@@ -645,3 +645,235 @@ def test_get_events_with_2_different_image_types():
     for _ in range(len(response.json()[c.RESULTS])):
         assert (response.json()[c.RESULTS][_][c.IMAGE_TYPE] == odh_image_type or
                 response.json()[c.RESULTS][_][c.IMAGE_TYPE] == bpla_image_type)
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несуществующим параметром "image_type"')
+def test_get_events_nonexist_image_type():
+    response = mf.get_events(c.IMAGE_TYPE, 10)
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.VALIDATE
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими и несуществующими параметрами "image_type"')
+def test_get_events_exist_and_nonexist_image_types():
+    response = mf.get_events(filter=c.IMAGE_TYPE, value=random.randint(0, 2),
+                             filter2=c.IMAGE_TYPE, value2=str(uuid.uuid4()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с некорректным параметром "image_type"')
+def test_get_events_wrong_format_image_type():
+    response = mf.get_events(c.IMAGE_TYPE, str(random.random()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "device"')
+def test_get_events_with_device():
+    device = mf.get_events(c.IMAGE_TYPE, 0).json()[c.RESULTS][0][c.DEVICE]
+    response = mf.get_events(c.DEVICE, device)
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.DEVICE] == device
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими параметрами "device"')
+def test_get_events_2_devices():
+    device_2 = str(uuid.uuid4())
+    get_events = mf.get_events(c.IMAGE_TYPE, 0)
+    device_1 = get_events.json()[c.RESULTS][0][c.DEVICE]
+    # print(device_1)
+    for _ in range(len(get_events.json()[c.RESULTS])):
+        if device_1 != get_events.json()[c.RESULTS][_][c.DEVICE]:
+            device_2 = get_events.json()[c.RESULTS][_][c.DEVICE]
+            break
+
+    response = mf.get_events(filter=c.DEVICE, value=device_1 + ',' + device_2)
+    assert response.status_code == 200
+    for device in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][device][c.DEVICE] == device_1 \
+               or response.json()[c.RESULTS][device][c.DEVICE] == device_2
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несуществующим параметром "device"')
+def test_get_events_nonexist_device():
+    response = mf.get_events(c.DEVICE, str(uuid.uuid4()))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] is None
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими и несуществующими параметрами "device"')
+def test_get_events_exist_and_nonexist_devices():
+    device = mf.get_events(c.IMAGE_TYPE, 0).json()[c.RESULTS][0][c.DEVICE]
+    response = mf.get_events(c.DEVICE, device + ',' + str(uuid.uuid4()))
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.DEVICE] == device
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "camera"')
+def test_get_events_with_camera():
+    camera = mf.get_events(c.IMAGE_TYPE, random.randint(0, 1)).json()[c.RESULTS][0][c.CAMERA]
+    response = mf.get_events(c.CAMERA, camera)
+    assert response.status_code == 200
+    for cam in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][cam][c.CAMERA] == camera
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими параметрами "camera"')
+def test_get_events_with_2_cameras():
+    camera_2 = str(uuid.uuid4())
+    get_events = mf.get_events(c.IMAGE_TYPE, random.randint(0, 1))
+    camera_1 = get_events.json()[c.RESULTS][0][c.CAMERA]
+    # print(camera_1)
+    for _ in range(len(get_events.json()[c.RESULTS])):
+        if camera_1 != get_events.json()[c.RESULTS][_][c.CAMERA]:
+            camera_2 = get_events.json()[c.RESULTS][_][c.CAMERA]
+            break
+
+    response = mf.get_events(filter=c.CAMERA, value=camera_1 + ',' + camera_2)
+    assert response.status_code == 200
+    for cam in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][cam][c.CAMERA] == camera_1 \
+               or response.json()[c.RESULTS][cam][c.CAMERA] == camera_2
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несуществующим параметром "camera"')
+def test_get_events_with_nonexist_camera():
+    response = mf.get_events(c.CAMERA, str(uuid.uuid4()))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] is None
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими и несуществующими параметрами "camera"')
+def test_get_events_with_exist_and_nonexist_cameras():
+    camera = mf.get_events(c.IMAGE_TYPE, 0).json()[c.RESULTS][0][c.CAMERA]
+    response = mf.get_events(c.CAMERA, camera + ',' + str(uuid.uuid4()))
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.CAMERA] == camera
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "label"')
+def test_get_events_with_label():
+    label = mf.get_events().json()[c.RESULTS][0][c.ISSUES][0][c.LABEL]
+    response = mf.get_events(c.LABEL, label)
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][0][c.ISSUES][0][c.LABEL] == label
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими параметрами "label"')
+def test_get_events_with_2_labels():
+    label_2 = '00-000'
+    get_events = mf.get_events(c.IMAGE_TYPE, random.randint(0, 2))
+    label_1 = get_events.json()[c.RESULTS][0][c.ISSUES][0][c.LABEL]
+    # print(camera_1)
+    for _ in range(len(get_events.json()[c.RESULTS])):
+        if label_1 != get_events.json()[c.RESULTS][_][c.ISSUES][0][c.LABEL]:
+            label_2 = get_events.json()[c.RESULTS][_][c.ISSUES][0][c.LABEL]
+            break
+
+    response = mf.get_events(filter=c.LABEL, value=label_1 + ',' + label_2)
+    assert response.status_code == 200
+    print(response.json()[c.RESULTS][0][c.ISSUES][0][c.LABEL])
+    for label in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][label][c.ISSUES][0][c.LABEL] == label_1 \
+               or response.json()[c.RESULTS][label][c.ISSUES][0][c.LABEL] == label_2
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несуществующим параметром "label"')
+def test_get_events_non_exist_label():
+    response = mf.get_events(c.LABEL, '30-541')
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.VALIDATE
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими и несуществующими параметрами "label"')
+def test_get_events_exist_and_non_exist_labels():
+    get_events = mf.get_events(c.IMAGE_TYPE, random.randint(0, 2))
+    label = get_events.json()[c.RESULTS][0][c.ISSUES][0][c.LABEL]
+    response = mf.get_events(c.LABEL, label + ',' + '34-524')
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.VALIDATE
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с параметром "id"')
+def test_get_events_with_id():
+    image_id = mf.get_events().json()[c.RESULTS][0][c.ID]
+    response = mf.get_events(c.ID, image_id)
+    assert response.status_code == 200
+    assert len(response.json()[c.RESULTS]) == 1
+    assert response.json()[c.RESULTS][0][c.ID] == image_id
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими параметрами "id"')
+def test_get_events_with_2_ids():
+    get_events = mf.get_events()
+    image_id_1 = get_events.json()[c.RESULTS][0][c.ID]
+    image_id_2 = get_events.json()[c.RESULTS][1][c.ID]
+    response = mf.get_events(c.ID, str(image_id_1) + ',' + str(image_id_2))
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.ID] == image_id_1 \
+               or response.json()[c.RESULTS][_][c.ID] == image_id_2
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несуществующим параметром "id"')
+def test_get_events_non_exist_image_id():
+    response = mf.get_events(c.ID, random.randint(9999999999999, 11111111111111111))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] is None
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с несколькими существующими и несуществующими параметрами "id"')
+def test_get_events_exist_and_non_exist_ids():
+    image_id = mf.get_events().json()[c.RESULTS][0][c.ID]
+    response = mf.get_events(c.ID, str(image_id) + ',' + str(random.randint(9999999999999, 11111111111111111)))
+    assert response.status_code == 200
+    assert len(response.json()[c.RESULTS]) == 1
+    assert response.json()[c.RESULTS][0][c.ID] == image_id
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с незаполненным параметром "id"')
+def test_get_events_with_empty_id():
+    response = mf.get_events(c.ID, None)
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка событий с корректными параметрами "page", "showBy", "from_dt", "to_dt", "image_type", "label"')
+def test_get_events_all_filters():
+    event = mf.get_events()
+    image_type = event.json()[c.RESULTS][0][c.IMAGE_TYPE]
+    timestamp = event.json()[c.RESULTS][0][c.TIMESTAMP]
+    label = event.json()[c.RESULTS][0][c.ISSUES][0][c.LABEL]
+
+    response = mf.get_events(filter=c.IMAGE_TYPE, value=image_type, filter2=c.FROM_DT, value2=timestamp - 1,
+                             filter3=c.TO_DT, value3=timestamp + 1, filter4=c.LABEL, value4=label)
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS][0][c.IMAGE_TYPE] == image_type
+    assert response.json()[c.RESULTS][0][c.ISSUES][0][c.LABEL] == label
+    assert response.json()[c.RESULTS][0][c.TIMESTAMP] == timestamp
