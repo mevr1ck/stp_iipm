@@ -1024,7 +1024,7 @@ def test_get_devices():
     assert type(response.json()[c.RESULTS][0]['last_seen']) == int
     assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.TYPE]) == int
     assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.MAKE]) == str
-    assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]) == str
+    assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.MODEL]) == str
     assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]) == str
     assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.REGISTRATION_NUMBER]) == str
 
@@ -1153,29 +1153,29 @@ def test_get_devices_with_exist_and_nonexistend_makes():
 @pytest.mark.gin
 @allure.title('Получение списка устройств с параметром "vehicle_model"')
 def test_get_devices_with_vehicle_model():
-    vehicle_model = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    vehicle_model = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.MODEL]
     response = mf.get_devices(c.VEHICLE_MODEL, vehicle_model)
     assert response.status_code == 200
     for _ in range(len(response.json()[c.RESULTS])):
-        assert response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_model
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.MODEL] == vehicle_model
 
 
 @pytest.mark.gin
 @allure.title('Получение списка устройств с несколькими существующими параметрами "vehicle_model"')
 def test_get_devices_with_2_vehicle_models():
-    vehicle_model_1 = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    vehicle_model_1 = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.MODEL]
     vehicle_model_2 = ''
     response = mf.get_devices()
     for _ in range(len(response.json()[c.RESULTS])):
-        if vehicle_model_1 != response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT]:
-            vehicle_model_2 = response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT]
+        if vehicle_model_1 != response.json()[c.RESULTS][_][c.VEHICLE][c.MODEL]:
+            vehicle_model_2 = response.json()[c.RESULTS][_][c.VEHICLE][c.MODEL]
             break
 
     get_devices = mf.get_devices(c.VEHICLE_MODEL, vehicle_model_1 + ',' + vehicle_model_2)
     assert get_devices.status_code == 200
     for _ in range(len(get_devices.json()[c.RESULTS])):
-        assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_model_1 \
-               or get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_model_2
+        assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.MODEL] == vehicle_model_1 \
+               or get_devices.json()[c.RESULTS][_][c.VEHICLE][c.MODEL] == vehicle_model_2
 
 
 @pytest.mark.gin
@@ -1189,11 +1189,11 @@ def test_get_devices_with_nonexistend_vehicle_model():
 @pytest.mark.gin
 @allure.title('Получение списка устройств с сущетсвующим и несуществующим параметрами "vehicle_model"')
 def test_get_devices_with_exist_and_nonexist_vehicle_models():
-    vehicle_model_1 = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    vehicle_model_1 = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.MODEL]
     get_devices = mf.get_devices(c.VEHICLE_MODEL, vehicle_model_1 + ',' + str(random.random()))
     assert get_devices.status_code == 200
     for _ in range(len(get_devices.json()[c.RESULTS])):
-        assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_model_1
+        assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.MODEL] == vehicle_model_1
 
 
 @pytest.mark.gin
