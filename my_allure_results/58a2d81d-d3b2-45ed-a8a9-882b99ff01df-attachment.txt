@@ -1,0 +1,7 @@
+https://iipm-test-echd.mos.ru/events/ {'image_type': '0', None: 'None'}
+https://iipm-test-echd.mos.ru/events/ {'image_type': '1', None: 'None'}
+https://iipm-test-echd.mos.ru/events/ {'image_type': '2', None: 'None'}
+{"code":200,"data":{"iterations":[{"uuid":"a4e15065-b831-4402-8225-c67028c6fb60","sourceUuid":"f89cb86c-b8a8-4d1e-a0e4-c9119c6418ea","createdAt":"2023-05-03T13:45:28.631651+03:00","status":"upload error","awaitedImagesAmount":null,"loadedImagesAmount":0,"loadedAt":null}]},"success":true}
+
+{"code":200,"data":{"iterations":[{"uuid":"a4e15065-b831-4402-8225-c67028c6fb60","sourceUuid":"f89cb86c-b8a8-4d1e-a0e4-c9119c6418ea","createdAt":"2023-05-03T13:45:28.631651+03:00","status":"upload error","awaitedImagesAmount":null,"loadedImagesAmount":0,"loadedAt":null}]},"success":true}
+

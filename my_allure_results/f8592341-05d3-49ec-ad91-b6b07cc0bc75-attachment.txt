@@ -1,0 +1,1 @@
+https://iipm-test-echd.mos.ru/events/ {'device': '87aa48d2-081d-427c-a5fc-191ff22cb4ae', None: 'None'}

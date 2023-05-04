@@ -1,0 +1,2 @@
+https://iipm-test-echd.mos.ru/events/ {'image_type': '1', None: 'None'}
+https://iipm-test-echd.mos.ru/events/ {'camera': '39ee0bd0-d776-438a-b44e-997fd888c35d,59ee0bd0-d776-438a-b44e-997fd888c35d', None: 'None'}

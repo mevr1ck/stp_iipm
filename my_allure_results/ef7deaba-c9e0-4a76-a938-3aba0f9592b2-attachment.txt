@@ -1,0 +1,2 @@
+https://iipm-test-echd.mos.ru/events/ {'image_type': '0', None: 'None'}
+https://iipm-test-echd.mos.ru/events/ {'label': '00-007,34-524', None: 'None'}

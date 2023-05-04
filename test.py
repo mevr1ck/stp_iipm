@@ -688,7 +688,7 @@ def test_get_events_2_devices():
     device_2 = str(uuid.uuid4())
     get_events = mf.get_events(c.IMAGE_TYPE, 0)
     device_1 = get_events.json()[c.RESULTS][0][c.DEVICE]
-    # print(device_1)
+
     for _ in range(len(get_events.json()[c.RESULTS])):
         if device_1 != get_events.json()[c.RESULTS][_][c.DEVICE]:
             device_2 = get_events.json()[c.RESULTS][_][c.DEVICE]
@@ -864,7 +864,8 @@ def test_get_events_with_empty_id():
 
 
 @pytest.mark.gin
-@allure.title('Получение списка событий с корректными параметрами "page", "showBy", "from_dt", "to_dt", "image_type", "label"')
+@allure.title(
+    'Получение списка событий с корректными параметрами "page", "showBy", "from_dt", "to_dt", "image_type", "label"')
 def test_get_events_all_filters():
     event = mf.get_events()
     image_type = event.json()[c.RESULTS][0][c.IMAGE_TYPE]
@@ -877,3 +878,347 @@ def test_get_events_all_filters():
     assert response.json()[c.RESULTS][0][c.IMAGE_TYPE] == image_type
     assert response.json()[c.RESULTS][0][c.ISSUES][0][c.LABEL] == label
     assert response.json()[c.RESULTS][0][c.TIMESTAMP] == timestamp
+
+
+@pytest.mark.gin
+@allure.title('Получение справочника кодов нарушений')
+def test_get_labels():
+    response = mf.get_gin_labels()
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+    assert type(response.json()[c.RESULTS][0][c.ID]) == str
+    assert type(response.json()[c.RESULTS][0]['name']) == str
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер')
+def test_get_list_cameras():
+    response = mf.get_cameras()
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+    assert type(response.json()['count']) == int
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с параметром "page"')
+def test_get_list_cameras_with_page():
+    response = mf.get_cameras(c.PAGE, 0)
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+    assert type(response.json()['count']) == int
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с некорректным параметром "page"')
+def test_get_list_cameras_incorrect_page():
+    response = mf.get_cameras(c.PAGE, random.random())
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с параметром "page", на котором нет результатов')
+def test_get_list_cameras_no_results():
+    response = mf.get_cameras(c.PAGE, 999999999)
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] is None
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с параметром "showBy"')
+def test_get_list_cameras_with_showBy():
+    response = mf.get_cameras(c.SHOW_BY, 1)
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+    assert type(response.json()['count']) == int
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с некорректным параметром "showBy"')
+def test_get_cameras_incorrect_showBy():
+    response = mf.get_cameras(c.SHOW_BY, random.random())
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с параметром "id"')
+def test_get_list_cameras_with_id():
+    id_1 = mf.get_cameras().json()[c.RESULTS][0][c.ID]
+    response = mf.get_cameras(c.ID, id_1)
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS][0][c.ID] == id_1
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с некорректным параметром "id"')
+def test_get_cameras_wrong_format_id():
+    response = mf.get_cameras(c.ID, str(random.random()))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] is None
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несуществующим параметром "id"')
+def test_get_cameras_nonexistend_id():
+    response = mf.get_cameras(c.ID, str(uuid.uuid4()))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] is None
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с параметром "device"')
+def test_get_cameras_with_devices():
+    device = mf.get_cameras().json()[c.RESULTS][0][c.DEVICE]
+    response = mf.get_cameras(c.DEVICE, device)
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.DEVICE] == device
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с несколькими существующими параметрами "device"')
+def test_get_cameras_2_devices():
+    device_1 = str(uuid.uuid4())
+    device_2 = mf.get_cameras().json()[c.RESULTS][0][c.DEVICE]
+
+    response = mf.get_cameras()
+    for _ in range(len(response.json()[c.RESULTS])):
+        if device_2 != response.json()[c.RESULTS][_][c.DEVICE]:
+            device_1 = response.json()[c.RESULTS][_][c.DEVICE]
+            break
+
+    response_2 = mf.get_cameras(c.DEVICE, device_1 + ',' + device_2)
+    assert response_2.status_code == 200
+    for device in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][device][c.DEVICE] == device_1 \
+               or response.json()[c.RESULTS][device][c.DEVICE] == device_2
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с несуществующим параметром "device"')
+def test_get_cameras_nonexistend_device():
+    response = mf.get_cameras(c.DEVICE, str(uuid.uuid4()))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] is None
+
+
+@pytest.mark.gin
+@allure.title('Получение списка видеокамер с несколькими существующими и несуществующими параметрами "device"')
+def test_get_cameras_exist_and_nonexist_cameras():
+    device = mf.get_cameras().json()[c.RESULTS][0][c.DEVICE]
+    response = mf.get_cameras(c.DEVICE, device + ',' + str(uuid.uuid4()))
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.DEVICE] == device
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств')
+def test_get_devices():
+    response = mf.get_devices()
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS][0][c.ID]) == str
+    assert type(response.json()[c.RESULTS][0]['name']) == str
+    assert type(response.json()[c.RESULTS][0]['frequency']) == int
+    assert type(response.json()[c.RESULTS][0]['last_seen']) == int
+    assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.TYPE]) == int
+    assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.MAKE]) == str
+    assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]) == str
+    assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]) == str
+    assert type(response.json()[c.RESULTS][0][c.VEHICLE][c.REGISTRATION_NUMBER]) == str
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с параметром "page"')
+def test_get_devices():
+    response = mf.get_devices(c.PAGE, 0)
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с некорректным параметром "page"')
+def test_get_devices_incorrect_page():
+    response = mf.get_devices(c.PAGE, str(random.random()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с параметром "showBy"')
+def test_get_devices_with_show_by():
+    response = mf.get_devices(c.SHOW_BY, 1)
+    assert response.status_code == 200
+    assert type(response.json()[c.RESULTS]) == list
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с некорректным параметром "showBy"')
+def test_get_devices_incorrect_showBy():
+    response = mf.get_devices(c.SHOW_BY, str(random.random()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.BIND
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с параметром "id"')
+def test_get_devices_with_id():
+    id_1 = mf.get_devices().json()[c.RESULTS][0][c.ID]
+    response = mf.get_devices(c.ID, id_1)
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS][0][c.ID] == id_1
+    assert response.json()[c.COUNT] == 1
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с некорректным параметром "id"')
+def test_get_devices_with_incorrect_id():
+    response = mf.get_devices(c.ID, str(random.random()))
+    assert response.status_code == 400
+    assert response.json()[c.MSG] == c.VALIDATE
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несуществующим параметром "id"')
+def test_get_devices_non_existend_id():
+    response = mf.get_devices(c.ID, str(uuid.uuid4()))
+    assert response.status_code == 200
+    assert response.json()[c.COUNT] == 0
+    assert response.json()[c.RESULTS] == []
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с параметром "vehicle_type"')
+def test_get_devices_with_vehicle_type():
+    vehicle_type = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.TYPE]
+    response = mf.get_devices(c.VEHICLE_TYPE, vehicle_type)
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS][0][c.VEHICLE][c.TYPE] == vehicle_type
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несколькими существующим параметрами "vehicle_type"')
+def test_get_devices_with_2_vehicle_types():
+    light_vehicle_type = 0
+    truck_vehicle_type = 1
+    response = mf.get_devices(c.VEHICLE_TYPE, str(light_vehicle_type) + ',' + str(truck_vehicle_type))
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.TYPE] == light_vehicle_type \
+               or response.json()[c.RESULTS][_][c.VEHICLE][c.TYPE] == truck_vehicle_type
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с существующими и несуществующими параметрами "vehicle_type"')
+def test_get_devices_with_exist_and_nonexistend_types():
+    vehicle_type = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.TYPE]
+    response = mf.get_devices(c.VEHICLE_TYPE, str(vehicle_type) + ',' + '123')
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.TYPE] == vehicle_type
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с параметром "vehicle_make"')
+def test_get_devices_with_vehicle_make():
+    vehicle_make = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.MAKE]
+    response = mf.get_devices(c.VEHICLE_MAKE, vehicle_make)
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS][0][c.VEHICLE][c.MAKE] == vehicle_make
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несуществующим параметром "vehicle_make"')
+def test_get_devices_with_2_vehicle_types():
+    light_vehicle_type = 0
+    truck_vehicle_type = 1
+    response = mf.get_devices(c.VEHICLE_TYPE, str(light_vehicle_type) + ',' + str(truck_vehicle_type))
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.TYPE] == light_vehicle_type \
+               or response.json()[c.RESULTS][_][c.VEHICLE][c.TYPE] == truck_vehicle_type
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с существующими и несуществующими параметрами "vehicle_make"')
+def test_get_devices_with_exist_and_nonexistend_makes():
+    vehicle_make = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.MAKE]
+    response = mf.get_devices(c.VEHICLE_MAKE, str(vehicle_make) + ',' + '123')
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.MAKE] == vehicle_make
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с параметром "vehicle_model"')
+def test_get_devices_with_vehicle_model():
+    vehicle_model = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    response = mf.get_devices(c.VEHICLE_MODEL, vehicle_model)
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_model
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несколькими существующими параметрами "vehicle_model"')
+def test_get_devices_with_2_vehicle_models():
+    vehicle_model_1 = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    vehicle_model_2 = ''
+    response = mf.get_devices()
+    for _ in range(len(response.json()[c.RESULTS])):
+        if vehicle_model_1 != response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT]:
+            vehicle_model_2 = response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT]
+            break
+
+    get_devices = mf.get_devices(c.VEHICLE_MODEL, vehicle_model_1 + ',' + vehicle_model_2)
+    assert get_devices.status_code == 200
+    for _ in range(len(get_devices.json()[c.RESULTS])):
+        assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_model_1 \
+               or get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_model_2
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несуществующим параметром "vehicle_model"')
+def test_get_devices_with_nonexistend_vehicle_model():
+    response = mf.get_devices(c.VEHICLE_MODEL, str(random.random()))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] == []
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с сущетсвующим и несуществующим параметрами "vehicle_model"')
+def test_get_devices_with_exist_and_nonexist_vehicle_models():
+    vehicle_model_1 = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    get_devices = mf.get_devices(c.VEHICLE_MODEL, vehicle_model_1 + ',' + str(random.random()))
+    assert get_devices.status_code == 200
+    for _ in range(len(get_devices.json()[c.RESULTS])):
+        assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_model_1
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с параметром "vehicle_department"')
+def test_get_devices_with_department():
+    department = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    response = mf.get_devices(c.DEPARTMENT, department)
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == department
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несколькими существующими параметрами "vehicle_department"')
+def test_get_devices_with_2_departments():
+    vehicle_department_1 = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    vehicle_department_2 = ''
+    response = mf.get_devices()
+    for _ in range(len(response.json()[c.RESULTS])):
+        if vehicle_department_1 != response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT]:
+            vehicle_department_2 = response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT]
+            break
+
+    get_devices = mf.get_devices(c.VEHICLE_DEPARTMENT, vehicle_department_1 + ',' + vehicle_department_2)
+    assert get_devices.status_code == 200
+    for _ in range(len(get_devices.json()[c.RESULTS])):
+        assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_department_1 \
+               or get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_department_2

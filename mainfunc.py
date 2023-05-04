@@ -1,3 +1,4 @@
+import pytest
 import requests
 import psycopg2
 from psycopg2 import Error
@@ -89,6 +90,7 @@ def delete_task_from_db(taskId):
             connection.close()
             print("Соединение с PostgreSQL закрыто")
 
+
 def get_screenshot_id_from_db():
     screenshot_id = ''
     try:
@@ -109,6 +111,7 @@ def get_screenshot_id_from_db():
             print("Соединение с PostgreSQL закрыто")
     print(screenshot_id)
     return screenshot_id[0]
+
 
 def get_tasks(showCancelled=None):
     url = f"{c.host}/tasks/index"
@@ -185,3 +188,28 @@ def send_expert_answer(screenshot_id):
 
     response = requests.post(url, headers=headers, json=payload)
     return response
+
+
+def get_gin_labels():
+    url = f"{c.host}/events/labels/"
+    headers = c.AUTH_HEADERS
+    response = requests.get(url, headers=headers)
+    return response
+
+
+def get_cameras(filter_1=None, value_1=None, filter_2=None, value_2=None):
+    url = f"{c.host}/devices/cameras/"
+    headers = c.AUTH_HEADERS
+    params = {filter_1: value_1, filter_2: value_2}
+    response = requests.get(url, headers=headers, params=params)
+    return response
+
+
+def get_devices(filter_1=None, value_1=None, filter_2=None, value_2=None):
+    url = f"{c.host}/devices/"
+    headers = c.AUTH_HEADERS
+    params = {filter_1: value_1, filter_2: value_2}
+    response = requests.get(url, headers=headers, params=params)
+    print(response.text)
+    return response
+

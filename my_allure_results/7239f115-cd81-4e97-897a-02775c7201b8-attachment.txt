@@ -1,0 +1,9 @@
+111 100 240
+{'labels': [111, 100, 240], 'detectors': [18], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
+{"msg":"OK","taskId":"7dee7231-8f08-4a33-9043-1081d5fb77c7"}
+
+{'labels': [111, 100, 240], 'detectors': [18], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
+{"code":400,"msg":"task with such parameters already exist","success":false}
+
+1 Запись успешно удалена
+Соединение с PostgreSQL закрыто

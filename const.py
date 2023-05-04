@@ -63,6 +63,18 @@ SHOW_BY = 'showBy'
 BIND = 'bind'
 FROM_DT = 'from_dt'
 TO_DT = 'to_dt'
+VEHICLE_TYPE = 'vehicle_type'
+VEHICLE_MAKE = 'vehicle_make'
+VEHICLE_MODEL = 'vehicle_model'
+VEHICLE_DEPARTMENT = 'vehicle_department'
+VEHICLE_REG_NUMBER = 'vehicle_registration_number'
+TYPE = "type"
+MAKE = "make"
+MODEL = "model"
+DEPARTMENT = "department"
+REGISTRATION_NUMBER = "registration_number"
+VEHICLE = 'vehicle'
+COUNT = 'count'
 
 LIST_LABELS = [50, 51, 60, 61, 70, 71, 80, 81, 90, 91, 100, 101, 110, 111, 121, 120, 130, 131, 140, 141, 150, 151,
                160, 161, 170, 181, 180, 190, 191, 200, 201, 211, 210, 221, 220, 231, 230, 240, 241, 250, 251,

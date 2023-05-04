@@ -1,0 +1,4 @@
+80 100 161
+{'labels': [80, 100, 161], 'detectors': [18], 'schedule': None}
+{"code":400,"msg":"validate","success":false}
+
