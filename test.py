@@ -1222,3 +1222,78 @@ def test_get_devices_with_2_departments():
     for _ in range(len(get_devices.json()[c.RESULTS])):
         assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_department_1 \
                or get_devices.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_department_2
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несуществующим параметром vehicle_department')
+def test_get_devices_with_nonexist_vehicle_department():
+    response = mf.get_devices(c.VEHICLE_DEPARTMENT, str(random.random()))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] == []
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с существующим и несуществующим параметрами "vehicle_department"')
+def test_get_devices_exist_and_nonexist_departments():
+    vehicle_department = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
+    response = mf.get_devices(c.VEHICLE_DEPARTMENT, vehicle_department + ',' + str(random.random()))
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == vehicle_department
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с параметром "vehicle_registration_number"')
+def test_get_devices_with_reg_number():
+    reg_number = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.REGISTRATION_NUMBER]
+    response = mf.get_devices(c.VEHICLE_REG_NUMBER, reg_number)
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.REGISTRATION_NUMBER] == reg_number
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несколькими существующими параметрами "vehicle_registration_number"')
+def test_get_devices_with_2_reg_numbers():
+    reg_number_1 = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.REGISTRATION_NUMBER]
+    reg_number_2 = ''
+    response = mf.get_devices()
+    for _ in range(len(response.json()[c.RESULTS])):
+        if reg_number_1 != response.json()[c.RESULTS][_][c.VEHICLE][c.REGISTRATION_NUMBER]:
+            reg_number_2 = response.json()[c.RESULTS][_][c.VEHICLE][c.REGISTRATION_NUMBER]
+            break
+
+    get_devices = mf.get_devices(c.VEHICLE_REG_NUMBER, reg_number_1 + ',' + reg_number_2)
+    assert get_devices.status_code == 200
+    for _ in range(len(get_devices.json()[c.RESULTS])):
+        assert get_devices.json()[c.RESULTS][_][c.VEHICLE][c.REGISTRATION_NUMBER] == reg_number_1 \
+               or get_devices.json()[c.RESULTS][_][c.VEHICLE][c.REGISTRATION_NUMBER] == reg_number_2
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с несуществующим параметром "vehicle_registration_number"')
+def test_get_devices_with_nonexistend_reg_number():
+    response = mf.get_devices(c.VEHICLE_REG_NUMBER, str(random.random()))
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS] == []
+
+
+@pytest.mark.gin
+@allure.title('Получение списка устройств с существующим и несуществующим параметрами vehicle_registration_number')
+def test_get_devices_with_exist_and_nonexist_reg_numbers():
+    reg_number = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.REGISTRATION_NUMBER]
+    response = mf.get_devices(c.VEHICLE_REG_NUMBER, reg_number + ',' + str(random.random()))
+    assert response.status_code == 200
+    for _ in range(len(response.json()[c.RESULTS])):
+        assert response.json()[c.RESULTS][_][c.VEHICLE][c.REGISTRATION_NUMBER] == reg_number
+
+
+@pytest.mark.gin
+@allure.title('Получение справочника типов устройств')
+def test_get_types_of_vehicles():
+    url = f"{c.host}/devices/vehicleTypes/"
+    headers = c.AUTH_HEADERS
+    response = requests.get(url, headers=headers)
+    assert response.status_code == 200
+    assert response.json()[c.RESULTS][0][c.ID] == 0
+    assert response.json()[c.RESULTS][1][c.ID] == 1
