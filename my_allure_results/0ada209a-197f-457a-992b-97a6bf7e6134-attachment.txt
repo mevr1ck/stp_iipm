@@ -1,4 +1,0 @@
-161 70 160
-{'labels': [161, 70, 160], 'detectors': [18], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
-{"msg":"OK","taskId":"3ea53c70-31a1-4968-b44a-d5e8b61065c7"}
-

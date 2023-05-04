@@ -1,2 +1,0 @@
-https://iipm-test-echd.mos.ru/events/ {None: 'None'}
-https://iipm-test-echd.mos.ru/events/ {'from_dt': '1677593903', None: 'None'}

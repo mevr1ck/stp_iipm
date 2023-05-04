@@ -1,1 +1,0 @@
-https://iipm-test-echd.mos.ru/events/ {'image_type': '9ad4a88a-4685-4043-a3a0-7c2520268aa8', None: 'None'}

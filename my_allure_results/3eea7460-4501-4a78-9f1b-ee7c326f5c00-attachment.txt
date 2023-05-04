@@ -1,6 +1,0 @@
-161 220 180
-{'labels': [161, 220, 180], 'detectors': [18], 'schedule': 'f5ffa3f4-0f68-4b92-b067-ddb0c66e0247'}
-{"msg":"OK","taskId":"bc154226-56cc-444f-baae-23671d877e3e"}
-
-1 Запись успешно удалена
-Соединение с PostgreSQL закрыто

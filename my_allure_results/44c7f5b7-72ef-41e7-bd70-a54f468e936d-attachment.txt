@@ -1,2 +1,0 @@
-https://iipm-test-echd.mos.ru/events/ {None: 'None'}
-https://iipm-test-echd.mos.ru/events/ {'label': '00-000', None: 'None'}

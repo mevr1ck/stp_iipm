@@ -1,2 +1,0 @@
-https://iipm-test-echd.mos.ru/events/ {None: 'None'}
-https://iipm-test-echd.mos.ru/events/ {'id': '3633748,3633749', None: 'None'}
