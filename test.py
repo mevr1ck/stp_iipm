@@ -979,7 +979,7 @@ def test_get_cameras_with_devices():
 @pytest.mark.gin
 @allure.title('Получение списка видеокамер с несколькими существующими параметрами "device"')
 def test_get_cameras_2_devices():
-    device_1 = str(uuid.uuid4())
+    device_1 = ''
     device_2 = mf.get_cameras().json()[c.RESULTS][0][c.DEVICE]
 
     response = mf.get_cameras()
@@ -990,9 +990,9 @@ def test_get_cameras_2_devices():
 
     response_2 = mf.get_cameras(c.DEVICE, device_1 + ',' + device_2)
     assert response_2.status_code == 200
-    for device in range(len(response.json()[c.RESULTS])):
-        assert response.json()[c.RESULTS][device][c.DEVICE] == device_1 \
-               or response.json()[c.RESULTS][device][c.DEVICE] == device_2
+    for device in range(len(response_2.json()[c.RESULTS])):
+        assert response_2.json()[c.RESULTS][device][c.DEVICE] == device_1 \
+               or response_2.json()[c.RESULTS][device][c.DEVICE] == device_2
 
 
 @pytest.mark.gin
@@ -1200,7 +1200,7 @@ def test_get_devices_with_exist_and_nonexist_vehicle_models():
 @allure.title('Получение списка устройств с параметром "vehicle_department"')
 def test_get_devices_with_department():
     department = mf.get_devices().json()[c.RESULTS][0][c.VEHICLE][c.DEPARTMENT]
-    response = mf.get_devices(c.DEPARTMENT, department)
+    response = mf.get_devices(c.VEHICLE_DEPARTMENT, department)
     assert response.status_code == 200
     for _ in range(len(response.json()[c.RESULTS])):
         assert response.json()[c.RESULTS][_][c.VEHICLE][c.DEPARTMENT] == department

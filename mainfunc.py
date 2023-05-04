@@ -202,6 +202,7 @@ def get_cameras(filter_1=None, value_1=None, filter_2=None, value_2=None):
     headers = c.AUTH_HEADERS
     params = {filter_1: value_1, filter_2: value_2}
     response = requests.get(url, headers=headers, params=params)
+    print(response.text)
     return response
 
 
